@@ -9,6 +9,14 @@ const defaultProps = {
   gap: 2
 };
 
+/**
+ * ex:
+ * <Sequential>
+ *  <Motion>{a => ...}</Motion>
+ *  <Motion>{b => ...}</Motion>
+ *  <Motion>{c => ...}</Motion>
+ * </Sequential>
+ */
 class Sequential extends Component {
   state = {
     epoch: null
@@ -48,6 +56,7 @@ class Sequential extends Component {
 
   render() {
     const {children} = this.props;
+
     return (
       { children }
     );

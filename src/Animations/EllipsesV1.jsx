@@ -1,7 +1,7 @@
 import React from 'react';
 import {Motion, spring} from 'react-motion';
 
-class Circle extends React.Component {
+class AnimatedCircle extends React.Component {
   state = {
     isResting: false,
   }
@@ -28,7 +28,6 @@ class Circle extends React.Component {
   }
 
   render() {
-
     return (
       <g>
         <Motion
@@ -58,19 +57,19 @@ class Circle extends React.Component {
 const EllipsesV1 = () => {
   return (
     <svg width={400} height={400}>
-      <Circle
+      <AnimatedCircle
         delay={15}
         xPos={100}
         yPos={200}
         radius={25}
       />
-      <Circle
+      <AnimatedCircle
         delay={20}
         xPos={200}
         yPos={200}
         radius={25}
       />
-      <Circle
+      <AnimatedCircle
         delay={25}
         xPos={300}
         yPos={200}
