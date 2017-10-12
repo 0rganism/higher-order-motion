@@ -1,7 +1,7 @@
 import React from 'react';
-import {Motion, spring} from 'react-motion';
 
-import EllipsesV1 from './Animations/EllipsesV1.jsx';
+import EllipsesAnimation from './Animations/EllipsesAnimation.jsx';
+import LoopAnimation from './Animations/LoopAnimation.jsx';
 
 const Animation = ({children, label}) => {
   return (
@@ -15,7 +15,10 @@ const Animation = ({children, label}) => {
 const AnimationGallery = () => {
   return ([
     <Animation label="Ellipses V1">
-      <EllipsesV1 />
+      <EllipsesAnimation />
+    </Animation>,
+    <Animation label="Loop">
+      <LoopAnimation />
     </Animation>
   ]);
 };

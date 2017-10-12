@@ -1,64 +1,66 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const propTypes = {
-  gap: PropTypes.number
-};
-
-const defaultProps = {
-  gap: 2
-};
-
-/**
- * ex:
- * <Sequential>
- *  <Motion>{a => ...}</Motion>
- *  <Motion>{b => ...}</Motion>
- *  <Motion>{c => ...}</Motion>
- * </Sequential>
+/** Sequence:
+ * Produces a composable component from an array of Animation components.
+ *
+ * @param{Array<Component>} Animations
+ * An array of components, with onRest event
+ *
+ * @return{Component} SequencedAnimations
+ * An array of components, with onRest event handled
  */
-class Sequential extends Component {
-  state = {
-    epoch: null
-  };
+const Sequence = (Animations) => {
+  return class SequencedAnimations extends React.Component {
+    state = {
+      /**
+       * @type {bool} - whether sequence is at rest.
+       */
+      resting: false,
+      /**
+       * @type {number} - index of active animation in sequence.
+       */
+      pointer: 0
+    };
 
-  componentDidMount() {
-    this.startLoop();
-  };
+    /**
+     * @param {bool} - resting - whether sequence is at rest.
+     */
+    componentWillReceiveProps({resting}) {
+      if (this.props.resting !== resting) {
+        this.setState({
+          resting: resting
+        });
+      }
+    };
 
-  componentWillUnmount() {
-    this.stopLoop();
-  };
+    /**
+     * Handle when an animation in the sequence comes to rest.
+     */
+    onRest = () => {
+      const next =  (this.state.pointer + 1) % Animations.length;
 
-  startLoop = () => {
-    if (!this._frameID) {
-      this._frameID = window.requestAnimationFrame(this.loop);
-    }
-  };
-
-  stopLoop = () => {
-    window.cancelAnimationFrame( this._frameId );
-  };
-
-  loop = (time) => {
-    const { current, start, gap } = this.state;
-    const interval = time - start;
-
-    if ( interval >= gap ) {
       this.setState({
-        start: time,
-        current: (current + 1) % this.props.chilren.length;
-      });
-    }
+        resting: !next
+        pointer: next
+      },
+        () => this.state.resting && this.props.onRest();
+      );
+    };
 
-    this._frameID = window.requestAnimationFrame(this.loop);
-  }
+    /**
+     * Render the sequence of animations with corresponding resting states.
+     * @return {Array<Component>} - animations in the sequence.
+     */
+    render()
+      const {resting, pointer} = this.state;
 
-  render() {
-    const {children} = this.props;
-
-    return (
-      { children }
-    );
+      return (
+        resting || Animations.map((Animation, index) => {
+          return (
+            <Animation resting={!(index === pointer)} {...this.props} />
+          );
+        });
+      );
+    };
   };
-}
+};

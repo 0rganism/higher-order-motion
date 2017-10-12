@@ -1,4 +1,5 @@
-const Loop = (Animation, delay) => {
+import React from 'react';
+const Loop = (delay) => (Animation) => {
   return class LoopedAnimation extends React.Component {
     /**
      * We maintain the resting state for the wrapped animation.
@@ -11,7 +12,7 @@ const Loop = (Animation, delay) => {
      * Enter resting state after animation cycle.
      */
     rest = () => {
-      this.setState({resting: true}, () => this.pause(this.reanimate));
+      this.setState({resting: true}, () => setTimeout(this.reanimate, delay));
     };
 
     /**
@@ -20,17 +21,25 @@ const Loop = (Animation, delay) => {
     reanimate = () => {
       requestAnimationFrame(() => {this.setState({resting: false})});
     };
-
-    /**
-     * Pause an action for the specified delay time.
-     */
-    pause = (action) => setTimeout(fn, delay);
-
+    
     /**
      * Render the animation with state and onRest handler.
      */
     render() {
-      return <Animation resting={resting} onRest={this.rest} {...this.props} />
+      return <Animation resting={this.state.resting} onRest={this.rest} {...this.props} />
     };
   };
 };
+
+export default Loop;
+
+/**NOTE:
+ * Could keep Component => Component signature by changing to:
+ *
+ * const loop = (delay) => (Animation) => {
+ *   return class LoopedAnimation ...
+ *  };
+ *
+ * // usage
+ * loop(delay)(Animation);
+ **/
