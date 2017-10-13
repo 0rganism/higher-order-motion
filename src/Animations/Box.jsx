@@ -39,7 +39,7 @@ const styles = {
       margin: '16px',
       width: '50%',
       height: '50%',
-      backgroundColor: 'rgb(238, 191, 69)',
+      backgroundColor: `rgb(${opacity}, ${opacity}, 50)`,
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
