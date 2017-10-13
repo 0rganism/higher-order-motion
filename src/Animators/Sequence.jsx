@@ -45,10 +45,11 @@ const Sequence = (Animations) => {
      * Handle when an animation in the sequence comes to rest.
      */
     onRest = (idx) => {
+      // ignore calls from already handled animations
+      // https://github.com/chenglou/react-motion/issues/348
       if (idx < this.state.pointer) return;
 
-      const next =  (this.state.pointer + 1) % Animations.length;
-
+      const next = (this.state.pointer + 1) % Animations.length;
       this._af = requestAnimationFrame(() => {
         this.setState({
           resting: !next,
