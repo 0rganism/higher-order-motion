@@ -11,16 +11,20 @@ import React from 'react';
  */
 const Sequence = (Animations) => {
   return class SequencedAnimations extends React.Component {
-    state = {
-      /**
-       * @type {bool} - whether sequence is at rest.
-       */
-      resting: false,
-      /**
-       * @type {number} - index of active animation in sequence.
-       */
-      pointer: 0
-    };
+    constructor(props) {
+      super(props);
+
+      this.state = {
+        /**
+         * @type {bool} - whether sequence is at rest.
+         */
+        resting: false,
+        /**
+         * @type {number} - index of active animation in sequence.
+         */
+        pointer: 0
+      };
+    }
 
     /**
      * @param {bool} - resting - whether sequence is at rest.
@@ -33,34 +37,49 @@ const Sequence = (Animations) => {
       }
     };
 
+    componentWillUnmount() {
+      cancelAnimationFrame(this._af);
+    }
+
     /**
      * Handle when an animation in the sequence comes to rest.
      */
-    onRest = () => {
+    onRest = (idx) => {
+      if (idx < this.state.pointer) return;
+
       const next =  (this.state.pointer + 1) % Animations.length;
 
-      this.setState({
-        resting: !next
-        pointer: next
-      },
-        () => this.state.resting && this.props.onRest();
-      );
+      this._af = requestAnimationFrame(() => {
+        this.setState({
+          resting: !next,
+          pointer: next
+        }, () => {
+          this.state.resting && this.props.onRest && this.props.onRest()
+        })
+      });
     };
 
     /**
      * Render the sequence of animations with corresponding resting states.
      * @return {Array<Component>} - animations in the sequence.
      */
-    render()
+    render() {
       const {resting, pointer} = this.state;
 
       return (
         resting || Animations.map((Animation, index) => {
           return (
-            <Animation resting={!(index === pointer)} {...this.props} />
-          );
-        });
+            <Animation
+              key={index}
+              resting={!(index === pointer)}
+              onRest={() => this.onRest(index)}
+              {...this.props}
+            />
+          )
+        })
       );
     };
   };
 };
+
+export default Sequence;

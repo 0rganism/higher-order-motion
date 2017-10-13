@@ -1,12 +1,21 @@
 import React from 'react';
+
+/**Loop:
+ * @param  {Number}   delay  - the delay between cycles
+ * @return {Function} ?      - HOC to configure an animation to loop by managing its rest state
+ */
 const Loop = (delay) => (Animation) => {
   return class LoopedAnimation extends React.Component {
-    /**
-     * We maintain the resting state for the wrapped animation.
-     */
     state = {
-      resting: false
+      /**
+       * @type {bool} resting - whether animation is at rest.
+       */
+      resting: false,
     };
+
+    componentWillUnmount() {
+      cancelAnimationFrame(this._af);
+    }
 
     /**
      * Enter resting state after animation cycle.
@@ -19,9 +28,9 @@ const Loop = (delay) => (Animation) => {
      * Reanimate the component after rest.
      */
     reanimate = () => {
-      requestAnimationFrame(() => {this.setState({resting: false})});
+      this._af = requestAnimationFrame(() => {this.setState({resting: false})});
     };
-    
+
     /**
      * Render the animation with state and onRest handler.
      */
@@ -32,14 +41,3 @@ const Loop = (delay) => (Animation) => {
 };
 
 export default Loop;
-
-/**NOTE:
- * Could keep Component => Component signature by changing to:
- *
- * const loop = (delay) => (Animation) => {
- *   return class LoopedAnimation ...
- *  };
- *
- * // usage
- * loop(delay)(Animation);
- **/
