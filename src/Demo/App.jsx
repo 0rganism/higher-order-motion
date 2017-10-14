@@ -1,8 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-import Ellipses from './Animations/Ellipses.jsx';
-import LoopingBox from './Animations/LoopingBox.jsx';
-import SequencedBoxes from './Animations/SequencedBoxes.jsx';
+import { LoopingBoxAnimation, SequencedBoxesAnimation } from './Animations.jsx';
 
 const Animation = ({children, label}) => {
   return (
@@ -15,19 +13,24 @@ const Animation = ({children, label}) => {
 
 const AnimationGallery = () => {
   return ([
-    <Animation key="Ellipses" label="Ellipses V1">
-      <Ellipses />
-    </Animation>,
     <Animation key="Loop" label="Loop">
-      <LoopingBox />
+      <LoopingBoxAnimation />
     </Animation>,
     <Animation key="Sequence" label="Sequence">
-      <SequencedBoxes />
+      <SequencedBoxesAnimation />
     </Animation>
   ]);
 };
 
-export default AnimationGallery;
+export default class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <AnimationGallery />
+      </div>
+    );
+  }
+}
 
 const styles = {
   Animation: {
