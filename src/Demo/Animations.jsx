@@ -1,4 +1,5 @@
 import React from 'react';
+import { flowRight } from 'lodash';
 
 import loop from '../HigherOrderMotions/Loop.jsx';
 import sequence from '../HigherOrderMotions/Sequence.jsx';
@@ -24,9 +25,15 @@ export const LoopingBoxAnimation = (props) =>
 *
 * Use sequence HOC to construct array of animations which play in sequence.
 */
-const EasingBox = (props) =>
-  <Ease {...props}>
+const EasingBox = ({onRest, resting}) =>
+  <Ease resting={resting} onRest={onRest}>
     { position => <Box {...position} /> }
   </Ease>;
-
 export const SequencedBoxesAnimation = sequence([EasingBox, EasingBox, EasingBox]);
+
+/** L O O P I N G S E Q U E N C E
+*
+* Compose loop with sequence.
+*/
+const LoopingSequence = flowRight(loop(1000), sequence);
+export const LoopingSequencedBoxesAnimation = LoopingSequence([EasingBox, EasingBox, EasingBox, EasingBox]);

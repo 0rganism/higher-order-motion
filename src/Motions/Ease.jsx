@@ -4,7 +4,7 @@ import {Motion, spring} from 'react-motion';
 /**
  * Animate the opacity of a box via a spring trajectory
  */
-const Ease = ({onRest, resting, ...rest}) => {
+const Ease = ({children, onRest, resting}) => {
   const initialCondition = {opacity: 0};
   const trajectory = {opacity: resting ? 0 : spring(1, {stiffness: 50, damping: 50})};
 
@@ -13,7 +13,7 @@ const Ease = ({onRest, resting, ...rest}) => {
       defaultStyle={initialCondition}
       style={trajectory}
       onRest={onRest}
-      {...rest}
+      children={children}
     />
   );
 };

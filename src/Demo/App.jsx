@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { LoopingBoxAnimation, SequencedBoxesAnimation } from './Animations.jsx';
+import { LoopingBoxAnimation, SequencedBoxesAnimation, LoopingSequencedBoxesAnimation } from './Animations.jsx';
 
 const Animation = ({children, label}) => {
   return (
@@ -18,7 +18,10 @@ const AnimationGallery = () => {
     </Animation>,
     <Animation key="Sequence" label="Sequence">
       <SequencedBoxesAnimation />
-    </Animation>
+    </Animation>,
+    <Animation key="LoopingSequence" label="LoopingSequence">
+      <LoopingSequencedBoxesAnimation />
+    </Animation>,
   ]);
 };
 

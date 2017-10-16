@@ -3,13 +3,11 @@ import React from 'react';
 /** Sequence:
  * Produces a composable component from an array of Animation components.
  *
- * @param{Array<Component>} Animations
- * An array of components, with onRest event
+ * @param  {Array<Component>} WrappedAnimations : An array of components, with onRest event
  *
- * @return{Component} SequencedAnimations
- * An array of components, with onRest event handled
+ * @return {Component}        SequencedAnimations : An array of components, with onRest event handled
  */
-const Sequence = (Animations) => {
+const sequence = (WrappedAnimations) => {
   return class SequencedAnimations extends React.Component {
     constructor(props) {
       super(props);
@@ -49,7 +47,9 @@ const Sequence = (Animations) => {
       // https://github.com/chenglou/react-motion/issues/348
       if (idx < this.state.pointer) return;
 
-      const next = (this.state.pointer + 1) % Animations.length;
+      console.log(`[seq] Animation ${idx} of ${WrappedAnimations.length - 1} has come to rest.`);
+
+      const next = (this.state.pointer + 1) % WrappedAnimations.length;
       this._af = requestAnimationFrame(() => {
         this.setState({
           resting: !next,
@@ -68,13 +68,12 @@ const Sequence = (Animations) => {
       const {resting, pointer} = this.state;
 
       return (
-        resting || Animations.map((Animation, index) => {
+        resting || WrappedAnimations.map((Animation, index) => {
           return (
             <Animation
               key={index}
               resting={!(index === pointer)}
               onRest={() => this.onRest(index)}
-              {...this.props}
             />
           )
         })
@@ -83,4 +82,4 @@ const Sequence = (Animations) => {
   };
 };
 
-export default Sequence;
+export default sequence;

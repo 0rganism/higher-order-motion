@@ -4,7 +4,7 @@ import React from 'react';
  * @param  {Number}   delay  - the delay between cycles
  * @return {Function} ?      - HOC to configure an animation to loop by managing its rest state
  */
-const Loop = (delay) => (Animation) => {
+const Loop = (delay) => (WrappedAnimation) => {
   return class LoopedAnimation extends React.Component {
     state = {
       /**
@@ -35,7 +35,7 @@ const Loop = (delay) => (Animation) => {
      * Render the animation with state and onRest handler.
      */
     render() {
-      return <Animation resting={this.state.resting} onRest={this.rest} {...this.props} />
+      return <WrappedAnimation resting={this.state.resting} onRest={this.rest} {...this.props} />;
     };
   };
 };
