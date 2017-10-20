@@ -20,7 +20,6 @@ export const LoopingBoxAnimation = (props) =>
     { position => <Box {...position} /> }
   </LoopingEase>;
 
-
 /** S E Q U E N C E D B O X :
 *
 * Use sequence HOC to construct array of animations which play in sequence.
@@ -29,6 +28,7 @@ const EasingBox = ({onRest, resting}) =>
   <Ease resting={resting} onRest={onRest}>
     { position => <Box {...position} /> }
   </Ease>;
+
 export const SequencedBoxesAnimation = sequence([EasingBox, EasingBox, EasingBox]);
 
 /** L O O P I N G S E Q U E N C E
@@ -36,4 +36,5 @@ export const SequencedBoxesAnimation = sequence([EasingBox, EasingBox, EasingBox
 * Compose loop with sequence.
 */
 const LoopingSequence = flowRight(loop(1000), sequence);
+
 export const LoopingSequencedBoxesAnimation = LoopingSequence([EasingBox, EasingBox, EasingBox, EasingBox]);

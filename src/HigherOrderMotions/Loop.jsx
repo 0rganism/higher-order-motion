@@ -6,6 +6,7 @@ import React from 'react';
  */
 const Loop = (delay) => (WrappedAnimation) => {
   return class LoopedAnimation extends React.Component {
+
     state = {
       /**
        * @type {bool} resting - whether animation is at rest.
@@ -13,6 +14,9 @@ const Loop = (delay) => (WrappedAnimation) => {
       resting: false,
     };
 
+    /**
+     * Cancel animation frame upon unmount.
+     */
     componentWillUnmount() {
       cancelAnimationFrame(this._af);
     }

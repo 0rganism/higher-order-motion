@@ -3,9 +3,9 @@ import React from 'react';
 /** Sequence:
  * Produces a composable component from an array of Animation components.
  *
- * @param  {Array<Component>} WrappedAnimations : An array of components, with onRest event
+ * @param {Array<Component>} WrappedAnimations   : An array of components, with onRest event
  *
- * @return {Component}        SequencedAnimations : An array of components, with onRest event handled
+ * @return {React.Component}        SequencedAnimations : An array of components, with onRest event handled
  */
 const sequence = (WrappedAnimations) => {
   return class SequencedAnimations extends React.Component {
@@ -14,7 +14,7 @@ const sequence = (WrappedAnimations) => {
 
       this.state = {
         /**
-         * @type {bool} - whether sequence is at rest.
+         * @type {boolean} - whether sequence is at rest.
          */
         resting: false,
         /**
@@ -25,7 +25,8 @@ const sequence = (WrappedAnimations) => {
     }
 
     /**
-     * @param {bool} - resting - whether sequence is at rest.
+     * Update resting state in response to props.
+     * @param {boolean} - resting - whether sequence is at rest.
      */
     componentWillReceiveProps({resting}) {
       if (this.props.resting !== resting) {
@@ -35,19 +36,21 @@ const sequence = (WrappedAnimations) => {
       }
     };
 
+    /**
+     * Clear our animation frame on unmount.
+     */
     componentWillUnmount() {
       cancelAnimationFrame(this._af);
     }
 
     /**
      * Handle when an animation in the sequence comes to rest.
+     * @param {number} idx - the index of the child animation which has come to rest.
      */
     onRest = (idx) => {
       // ignore calls from already handled animations
       // https://github.com/chenglou/react-motion/issues/348
       if (idx < this.state.pointer) return;
-
-      console.log(`[seq] Animation ${idx} of ${WrappedAnimations.length - 1} has come to rest.`);
 
       const next = (this.state.pointer + 1) % WrappedAnimations.length;
       this._af = requestAnimationFrame(() => {
@@ -55,6 +58,7 @@ const sequence = (WrappedAnimations) => {
           resting: !next,
           pointer: next
         }, () => {
+          // trigger onRest callback if one exists
           this.state.resting && this.props.onRest && this.props.onRest()
         })
       });
